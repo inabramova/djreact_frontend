@@ -12,14 +12,35 @@ const ListDiv = styled.div`
     }
 `
 
+function formatDate(str) {
+    var parsed = parseInt(str);
+    if (isNaN(parsed)|| parsed!= str) return str;
+    var date = new Date(parsed);
+    var monthNames = [
+      "January", "February", "March",
+      "April", "May", "June", "July",
+      "August", "September", "October",
+      "November", "December"
+    ];
+  
+    var day = date.getDate();
+    var monthIndex = date.getMonth();
+    var year = date.getFullYear();
+  
+    return `${day} ${monthNames[monthIndex]} ${year}`;
+  }
+
 const FindError = (props)=> {
-   const val = props.val;
+   let val = props.val;
+   if (props.date) {
+       val = formatDate(val);
+   }
    const className = props.date? 'date':'';
    const hasError = props.item.field_errors && props.item.field_errors[props.itemKey];
    if (hasError && props.item.field_errors[props.itemKey].find(x=>{
     return x.invalid.indexOf(val)>-1;
-   })) return (<Tooltip placement="top" title={"Invalid "+props.itemKey}><Tag color="red">{props.val}</Tag></Tooltip>);
-   else return <span className={className}>{props.val}</span>;
+   })) return (<Tooltip placement="top" title={"Invalid "+props.itemKey}><Tag color="red">{val}</Tag></Tooltip>);
+   else return <span className={className}>{val}</span>;
 }
 
 const ItemVal = (props) => {
